@@ -87,6 +87,8 @@ function resize() {
     canvasHeight = universeDiv[0].offsetHeight;
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
+    starsCount = canvasWidth*canvasHeight/6000;
+    console.log(starsCount);
     pointGenerator();
 }
 
