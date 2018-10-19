@@ -20,12 +20,12 @@ resize();
 pointGenerator();
 pointSet();
 
-
+/*
 document.querySelector('.universe').onmousemove = function (event) {
         mX = (canvasWidth / 2 - event.clientX)/2;
         mY = (canvasHeight / 2 - event.clientY)/2;
 };
-
+*/
 mainLoop();
 
 function mainLoop() {
@@ -99,7 +99,7 @@ function lineDraw() {
         let y = pointCoord[i][1];
         let z = pointCoord[i][2];
 
-        for (let q = 1; q < starsCount; q++) {
+        for (let q = 1; q < starsCount/5; q++) {
 
             xCord = Math.abs(x - pointCoord[q][0]);
             yCord = Math.abs(y - pointCoord[q][1]);
