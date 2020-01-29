@@ -14,8 +14,9 @@ window.onload = function () {
     let starsSpeed = 10;
     let k = 3000;
     let pointDistance = 150;
-    let pointDistance3D = 500;
+    let pointDistance3D = 1000;
     let circle = 2 * Math.PI;
+    let flashBrightness = 200;
 
     universeDiv.onmousemove = function (event) {
         mX = (canvasWidth / 2 - event.clientX) / 2;
@@ -79,8 +80,8 @@ window.onload = function () {
                 ctx.fill();
             }
 
-            if ((Math.random() > .9991) && pointCoord[i][5] === 0) {
-                pointCoord[i][5] = 200;
+            if ((Math.random() > .9997) && pointCoord[i][5] === 0) {
+                pointCoord[i][5] = flashBrightness;
             }
 
         }
@@ -145,10 +146,11 @@ window.onload = function () {
 
                         ctx.beginPath();
                         // ctx.strokeStyle = 'rgba(255, 0, 0,' + ((1 - vector / pointDistance) / 4 + (pointCoord[i][5] / 255)) + ')';
-                        ctx.strokeStyle = 'rgba(' + pointCoord[i][4] + ',' + ((1 - vector / pointDistance) / 4 + (pointCoord[i][5] / 255)) + ')';
+                        ctx.strokeStyle = 'rgba(' + pointCoord[i][4] + ',' + ((1 - vector / pointDistance) / 2 + (pointCoord[i][5] / 255)) + ')';
                         ctx.moveTo(x, y);
                         ctx.lineTo(x2, y2);
                         ctx.stroke();
+                        // console.log(((1 - vector / pointDistance) / 4 + (pointCoord[i][5] / 255)));
                     }
                 }
 
