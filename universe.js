@@ -17,11 +17,12 @@ window.onload = function () {
     let pointDistance3D = 1000;
     let circle = 2 * Math.PI;
     let flashBrightness = 200;
+    let sinInt = 0;
 
-    universeDiv.onmousemove = function (event) {
-        mX = (canvasWidth / 2 - event.clientX) / 2;
-        mY = (canvasHeight / 2 - event.clientY) / 2;
-    };
+    // universeDiv.onmousemove = function (event) {
+    //     mX = (canvasWidth / 2 - event.clientX) / 2;
+    //     mY = (canvasHeight / 2 - event.clientY) / 2;
+    // };
 
     addEventListener('resize', resize);
     addEventListener('orientationchange', resize);
@@ -47,6 +48,8 @@ window.onload = function () {
             yTarget--
         }
 
+        sinInt <= 360 ? sinInt += .005 : sinInt = 0;
+
 
         pointSet();
         lineDraw();
@@ -55,14 +58,18 @@ window.onload = function () {
     }
 
     function pointGenerator() {
-        let x, y, z, s, c;
+        let x, y, z, s, c, xSpeed, ySpeed;
         for (let i = 0; i < starsCount; i++) {
             x = Math.random() * canvasWidth - canvasWidth / 2;
+            xSpeed = Math.random();
+            Math.random() > .5 ? xSpeed *= -1 : null;
             y = Math.random() * canvasHeight - canvasHeight / 2;
+            ySpeed = Math.random();
+            Math.random() > .5 ? ySpeed *= -1 : null;
             z = Math.random() * (deepStars + k);
             s = Math.random() * starsSpeed + 1;
             c = Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255);
-            pointCoord[i] = [x, y, z, s, c, 0];
+            pointCoord[i] = [x, y, z, s, c, 0, xSpeed, ySpeed];
         }
     }
 
@@ -88,14 +95,30 @@ window.onload = function () {
     }
 
     function pointMove() {
+        let zOffset = Math.sin(sinInt) * 10;
+
         for (let i = 0; i < starsCount; i++) {
 
             if (pointCoord[i][2] > -k) {
-                pointCoord[i][2] -= pointCoord[i][3];
+                pointCoord[i][2] -= pointCoord[i][3] + zOffset;
             } else {
                 pointCoord[i][2] = deepStars;
             }
 
+            pointCoord[i][0] = pointCoord[i][0] + pointCoord[i][6];
+            if (pointCoord[i][0] > canvasWidth) {
+                pointCoord[i][0] = canvasWidth / 2 * -1
+            }
+            if (pointCoord[i][0] < (canvasWidth * -1)) {
+                pointCoord[i][0] = canvasWidth / 2;
+            }
+            pointCoord[i][1] = pointCoord[i][1] + pointCoord[i][7];
+            if (pointCoord[i][1] > canvasHeight) {
+                pointCoord[i][1] = canvasHeight / 2 * -1
+            }
+            if (pointCoord[i][1] < (canvasHeight * -1)) {
+                pointCoord[i][1] = canvasHeight / 2;
+            }
         }
     }
 
