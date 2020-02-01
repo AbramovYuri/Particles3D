@@ -24,6 +24,19 @@ window.onload = function () {
     //     mY = (canvasHeight / 2 - event.clientY) / 2;
     // };
 
+    universeDiv.onmousedown = function (event) {
+        pointDistance3D = 2000;
+        pointDistance = 250;
+    };
+
+    universeDiv.onmouseup = function (event) {
+        let counter = setInterval(function () {
+            pointDistance3D > 1000 ? pointDistance3D-- : null;
+            pointDistance > 150 ? pointDistance-- : null;
+            if (pointDistance3D === 1000) clearInterval(counter);
+        }, 30);
+    };
+
     addEventListener('resize', resize);
     addEventListener('orientationchange', resize);
 
