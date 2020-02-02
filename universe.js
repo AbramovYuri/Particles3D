@@ -19,10 +19,10 @@ window.onload = function () {
     let flashBrightness = 200;
     let sinInt = 0;
 
-    // universeDiv.onmousemove = function (event) {
-    //     mX = (canvasWidth / 2 - event.clientX) / 2;
-    //     mY = (canvasHeight / 2 - event.clientY) / 2;
-    // };
+    universeDiv.onmousemove = function (event) {
+        mX = (canvasWidth / 2 - event.clientX) / 2;
+        mY = (canvasHeight / 2 - event.clientY) / 2;
+    };
 
     universeDiv.onmousedown = function (event) {
         pointDistance3D = 2000;
@@ -91,8 +91,8 @@ window.onload = function () {
         for (let i = 0; i < starsCount; i++) {
             ctx.fillStyle = 'rgb(' + pointCoord[i][4] + ')';
             let p = pointCoord[i][2];
-            let x = (k * pointCoord[i][0]) / (p + k) + canvasWidth / 2 + xTarget;
-            let y = (k * pointCoord[i][1]) / (p + k) + canvasHeight / 2 + yTarget;
+            let x = (k * pointCoord[i][0]) / (p + k) + canvasWidth / 2 - xTarget;
+            let y = (k * pointCoord[i][1]) / (p + k) + canvasHeight / 2 - yTarget;
             let r = (deepStars - p) / deepStars * 1.5;
             if (r > .2) {
                 ctx.beginPath();
@@ -166,12 +166,12 @@ window.onload = function () {
 
                 if (vector > 5 && vector < pointDistance3D) {
                     let p = pointCoord[i][2];
-                    let x = (k * pointCoord[i][0]) / (p + k) + canvasWidth / 2 + xTarget;
-                    let y = (k * pointCoord[i][1]) / (p + k) + canvasHeight / 2 + yTarget;
+                    let x = (k * pointCoord[i][0]) / (p + k) + canvasWidth / 2 - xTarget;
+                    let y = (k * pointCoord[i][1]) / (p + k) + canvasHeight / 2 - yTarget;
 
                     let p2 = pointCoord[q][2];
-                    let x2 = (k * pointCoord[q][0]) / (p2 + k) + canvasWidth / 2 + xTarget;
-                    let y2 = (k * pointCoord[q][1]) / (p2 + k) + canvasHeight / 2 + yTarget;
+                    let x2 = (k * pointCoord[q][0]) / (p2 + k) + canvasWidth / 2 - xTarget;
+                    let y2 = (k * pointCoord[q][1]) / (p2 + k) + canvasHeight / 2 - yTarget;
 
                     xCord = Math.abs(x - x2);
                     yCord = Math.abs(y - y2);
@@ -186,7 +186,6 @@ window.onload = function () {
                         ctx.moveTo(x, y);
                         ctx.lineTo(x2, y2);
                         ctx.stroke();
-                        // console.log(((1 - vector / pointDistance) / 4 + (pointCoord[i][5] / 255)));
                     }
                 }
 
