@@ -12,8 +12,8 @@ window.onload = function () {
     let starsCount;
     let starsSpeed = 10;
     let deepStars = 3000;
-    let pointDistance = 150;
-    let pointDistance3D = 1000;
+    let pointDistance = 200;
+    let pointDistance3D = 1500;
     let circle = 2 * Math.PI;
     let flashBrightness = 200;
     let sinInt = 0;
@@ -155,6 +155,10 @@ window.onload = function () {
             let z = pointCoord[i][2];
 
             pointCoord[i][5] > 0 ? pointCoord[i][5]-- : null;
+            let p = pointCoord[i][2];
+            let r = (deepStars - p) / deepStars;
+
+            if (r < .5) continue;
 
             for (let q = 1; q < starsCount / 4; q++) {
 
@@ -164,33 +168,29 @@ window.onload = function () {
 
                 vector = Math.sqrt((xCord * xCord) + (yCord * yCord) + (zCord * zCord));
 
-                let p = pointCoord[i][2];
-                let r = (deepStars - p) / deepStars * 1.5;
-                if (r > .4) {
 
-                    if (vector > 5 && vector < pointDistance3D) {
-                        let p = pointCoord[i][2];
-                        let x = (deepStars * pointCoord[i][0]) / (p + deepStars) + canvasWidth / 2 - xTarget;
-                        let y = (deepStars * pointCoord[i][1]) / (p + deepStars) + canvasHeight / 2 - yTarget;
+                if (vector > 5 && vector < pointDistance3D) {
+                    let p = pointCoord[i][2];
+                    let x = (deepStars * pointCoord[i][0]) / (p + deepStars) + canvasWidth / 2 - xTarget;
+                    let y = (deepStars * pointCoord[i][1]) / (p + deepStars) + canvasHeight / 2 - yTarget;
 
-                        let p2 = pointCoord[q][2];
-                        let x2 = (deepStars * pointCoord[q][0]) / (p2 + deepStars) + canvasWidth / 2 - xTarget;
-                        let y2 = (deepStars * pointCoord[q][1]) / (p2 + deepStars) + canvasHeight / 2 - yTarget;
+                    let p2 = pointCoord[q][2];
+                    let x2 = (deepStars * pointCoord[q][0]) / (p2 + deepStars) + canvasWidth / 2 - xTarget;
+                    let y2 = (deepStars * pointCoord[q][1]) / (p2 + deepStars) + canvasHeight / 2 - yTarget;
 
-                        xCord = Math.abs(x - x2);
-                        yCord = Math.abs(y - y2);
+                    xCord = Math.abs(x - x2);
+                    yCord = Math.abs(y - y2);
 
-                        vector = Math.sqrt((xCord * xCord) + (yCord * yCord));
+                    vector = Math.sqrt((xCord * xCord) + (yCord * yCord));
 
-                        if (vector > 5 && vector < pointDistance) {
+                    if (vector > 5 && vector < pointDistance) {
 
-                            ctx.beginPath();
-                            // ctx.strokeStyle = 'rgba(255, 0, 0,' + ((1 - vector / pointDistance) / 4 + (pointCoord[i][5] / 255)) + ')';
-                            ctx.strokeStyle = 'rgba(' + pointCoord[i][4] + ',' + ((1 - vector / pointDistance) / 2 + (pointCoord[i][5] / 255)) + ')';
-                            ctx.moveTo(x, y);
-                            ctx.lineTo(x2, y2);
-                            ctx.stroke();
-                        }
+                        ctx.beginPath();
+                        // ctx.strokeStyle = 'rgba(255, 0, 0,' + ((1 - vector / pointDistance) / 4 + (pointCoord[i][5] / 255)) + ')';
+                        ctx.strokeStyle = 'rgba(' + pointCoord[i][4] + ',' + ((1 - vector / pointDistance) / 2 + (pointCoord[i][5] / 255)) + ')';
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x2, y2);
+                        ctx.stroke();
                     }
                 }
 
