@@ -9,10 +9,9 @@ window.onload = function () {
     let xTarget = 0;
     let yTarget = 0;
     let pointCoord = [];
-    let starsCount = 300;
-    let deepStars = 3000;
+    let starsCount;
     let starsSpeed = 10;
-    let k = 3000;
+    let deepStars = 3000;
     let pointDistance = 150;
     let pointDistance3D = 1000;
     let circle = 2 * Math.PI;
@@ -22,19 +21,17 @@ window.onload = function () {
     universeDiv.onmousemove = function (event) {
         mX = (canvasWidth / 2 - event.clientX) / 2;
         mY = (canvasHeight / 2 - event.clientY) / 2;
-    };
 
-    universeDiv.onmousedown = function (event) {
+        if (pointDistance > 150) return;
+
         pointDistance3D = 2000;
         pointDistance = 250;
     };
 
-    universeDiv.onmouseup = function (event) {
-        let counter = setInterval(function () {
-            pointDistance3D > 1000 ? pointDistance3D-- : null;
-            pointDistance > 150 ? pointDistance-- : null;
-            if (pointDistance3D === 1000) clearInterval(counter);
-        }, 30);
+    universeDiv.onmousedown = function () {
+        if (pointDistance > 150) return;
+        pointDistance3D = 2000;
+        pointDistance = 250;
     };
 
     addEventListener('resize', resize);
@@ -63,6 +60,8 @@ window.onload = function () {
 
         sinInt <= 360 ? sinInt += .005 : sinInt = 0;
 
+        pointDistance3D > 1000 ? pointDistance3D-- : null;
+        pointDistance > 150 ? pointDistance -= .2 : null;
 
         pointSet();
         lineDraw();
@@ -79,7 +78,7 @@ window.onload = function () {
             y = Math.random() * canvasHeight - canvasHeight / 2;
             ySpeed = Math.random();
             Math.random() > .5 ? ySpeed *= -1 : null;
-            z = Math.random() * (deepStars + k);
+            z = Math.random() * -deepStars;
             s = Math.random() * starsSpeed + 1;
             c = Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255);
             pointCoord[i] = [x, y, z, s, c, 0, xSpeed, ySpeed];
@@ -89,12 +88,13 @@ window.onload = function () {
     function pointSet() {
 
         for (let i = 0; i < starsCount; i++) {
-            ctx.fillStyle = 'rgb(' + pointCoord[i][4] + ')';
-            let p = pointCoord[i][2];
-            let x = (k * pointCoord[i][0]) / (p + k) + canvasWidth / 2 - xTarget;
-            let y = (k * pointCoord[i][1]) / (p + k) + canvasHeight / 2 - yTarget;
-            let r = (deepStars - p) / deepStars * 1.5;
-            if (r > .2) {
+            let z = pointCoord[i][2];
+            let x = (deepStars * pointCoord[i][0]) / (z + deepStars) + canvasWidth / 2 - xTarget;
+            let y = (deepStars * pointCoord[i][1]) / (z + deepStars) + canvasHeight / 2 - yTarget;
+            let r = (deepStars - z) / deepStars * 1.5;
+            if (r > .1) {
+                ctx.fillStyle = 'rgba(' + pointCoord[i][4] + ',' + r + ')';
+                r < 1 ? r = 1 : null;
                 ctx.beginPath();
                 ctx.arc(x, y, r, 0, circle);
                 ctx.fill();
@@ -112,8 +112,8 @@ window.onload = function () {
 
         for (let i = 0; i < starsCount; i++) {
 
-            if (pointCoord[i][2] > -k) {
-                pointCoord[i][2] -= pointCoord[i][3] + zOffset;
+            if (pointCoord[i][2] > -deepStars) {
+                pointCoord[i][2] -= (pointCoord[i][3] - zOffset);
             } else {
                 pointCoord[i][2] = deepStars;
             }
@@ -156,7 +156,7 @@ window.onload = function () {
 
             pointCoord[i][5] > 0 ? pointCoord[i][5]-- : null;
 
-            for (let q = 1; q < starsCount / 6; q++) {
+            for (let q = 1; q < starsCount / 4; q++) {
 
                 xCord = Math.abs(x - pointCoord[q][0]);
                 yCord = Math.abs(y - pointCoord[q][1]);
@@ -164,28 +164,33 @@ window.onload = function () {
 
                 vector = Math.sqrt((xCord * xCord) + (yCord * yCord) + (zCord * zCord));
 
-                if (vector > 5 && vector < pointDistance3D) {
-                    let p = pointCoord[i][2];
-                    let x = (k * pointCoord[i][0]) / (p + k) + canvasWidth / 2 - xTarget;
-                    let y = (k * pointCoord[i][1]) / (p + k) + canvasHeight / 2 - yTarget;
+                let p = pointCoord[i][2];
+                let r = (deepStars - p) / deepStars * 1.5;
+                if (r > .4) {
 
-                    let p2 = pointCoord[q][2];
-                    let x2 = (k * pointCoord[q][0]) / (p2 + k) + canvasWidth / 2 - xTarget;
-                    let y2 = (k * pointCoord[q][1]) / (p2 + k) + canvasHeight / 2 - yTarget;
+                    if (vector > 5 && vector < pointDistance3D) {
+                        let p = pointCoord[i][2];
+                        let x = (deepStars * pointCoord[i][0]) / (p + deepStars) + canvasWidth / 2 - xTarget;
+                        let y = (deepStars * pointCoord[i][1]) / (p + deepStars) + canvasHeight / 2 - yTarget;
 
-                    xCord = Math.abs(x - x2);
-                    yCord = Math.abs(y - y2);
+                        let p2 = pointCoord[q][2];
+                        let x2 = (deepStars * pointCoord[q][0]) / (p2 + deepStars) + canvasWidth / 2 - xTarget;
+                        let y2 = (deepStars * pointCoord[q][1]) / (p2 + deepStars) + canvasHeight / 2 - yTarget;
 
-                    vector = Math.sqrt((xCord * xCord) + (yCord * yCord));
+                        xCord = Math.abs(x - x2);
+                        yCord = Math.abs(y - y2);
 
-                    if (vector > 5 && vector < pointDistance) {
+                        vector = Math.sqrt((xCord * xCord) + (yCord * yCord));
 
-                        ctx.beginPath();
-                        // ctx.strokeStyle = 'rgba(255, 0, 0,' + ((1 - vector / pointDistance) / 4 + (pointCoord[i][5] / 255)) + ')';
-                        ctx.strokeStyle = 'rgba(' + pointCoord[i][4] + ',' + ((1 - vector / pointDistance) / 2 + (pointCoord[i][5] / 255)) + ')';
-                        ctx.moveTo(x, y);
-                        ctx.lineTo(x2, y2);
-                        ctx.stroke();
+                        if (vector > 5 && vector < pointDistance) {
+
+                            ctx.beginPath();
+                            // ctx.strokeStyle = 'rgba(255, 0, 0,' + ((1 - vector / pointDistance) / 4 + (pointCoord[i][5] / 255)) + ')';
+                            ctx.strokeStyle = 'rgba(' + pointCoord[i][4] + ',' + ((1 - vector / pointDistance) / 2 + (pointCoord[i][5] / 255)) + ')';
+                            ctx.moveTo(x, y);
+                            ctx.lineTo(x2, y2);
+                            ctx.stroke();
+                        }
                     }
                 }
 
