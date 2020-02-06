@@ -45,24 +45,24 @@ window.onload = function () {
     mainLoop();
 
     function mainLoop() {
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         if (xTarget < mX) {
             xTarget++
         } else if (xTarget > mX) {
             xTarget--
         }
-
         if (yTarget < mY) {
+
             yTarget++
         } else if (yTarget > mY) {
             yTarget--
         }
-
         sinInt <= 360 ? sinInt += .005 : sinInt = 0;
 
         pointDistance3D > 1000 ? pointDistance3D-- : null;
+
         pointDistance > 150 ? pointDistance -= .2 : null;
 
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         pointSet();
         lineDraw();
         pointMove();
@@ -82,28 +82,6 @@ window.onload = function () {
             s = Math.random() * starsSpeed + 1;
             c = Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255);
             pointCoord[i] = [x, y, z, s, c, 0, xSpeed, ySpeed];
-        }
-    }
-
-    function pointSet() {
-
-        for (let i = 0; i < starsCount; i++) {
-            let z = pointCoord[i][2];
-            let x = (deepStars * pointCoord[i][0]) / (z + deepStars) + canvasWidth / 2 - xTarget;
-            let y = (deepStars * pointCoord[i][1]) / (z + deepStars) + canvasHeight / 2 - yTarget;
-            let r = (deepStars - z) / deepStars * 1.5;
-            if (r > .1) {
-                ctx.fillStyle = 'rgba(' + pointCoord[i][4] + ',' + r + ')';
-                r < 1 ? r = 1 : null;
-                ctx.beginPath();
-                ctx.arc(x, y, r, 0, circle);
-                ctx.fill();
-            }
-
-            if ((Math.random() > .9997) && pointCoord[i][5] === 0) {
-                pointCoord[i][5] = flashBrightness;
-            }
-
         }
     }
 
@@ -135,15 +113,28 @@ window.onload = function () {
         }
     }
 
-    function resize() {
-        canvasWidth = universeDiv.offsetWidth;
-        canvasHeight = universeDiv.offsetHeight;
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
-        starsCount = canvasWidth * canvasHeight / 6000;
-        console.log(starsCount);
-        pointGenerator();
+    function pointSet() {
+
+        for (let i = 0; i < starsCount; i++) {
+            let z = pointCoord[i][2];
+            let x = (deepStars * pointCoord[i][0]) / (z + deepStars) + canvasWidth / 2 - xTarget;
+            let y = (deepStars * pointCoord[i][1]) / (z + deepStars) + canvasHeight / 2 - yTarget;
+            let r = (deepStars - z) / deepStars * 1.5;
+            if (r > .1) {
+                ctx.fillStyle = 'rgba(' + pointCoord[i][4] + ',' + r + ')';
+                r < 1 ? r = 1 : null;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, circle);
+                ctx.fill();
+            }
+
+            if ((Math.random() > .9997) && pointCoord[i][5] === 0) {
+                pointCoord[i][5] = flashBrightness;
+            }
+
+        }
     }
+
 
     function lineDraw() {
         let vector, xCord, yCord, zCord;
@@ -155,19 +146,17 @@ window.onload = function () {
             let z = pointCoord[i][2];
 
             pointCoord[i][5] > 0 ? pointCoord[i][5]-- : null;
-            let p = pointCoord[i][2];
-            let r = (deepStars - p) / deepStars;
 
-            if (r < .5) continue;
+            if ((deepStars - z) / deepStars < .5) continue;
 
             for (let q = 1; q < starsCount / 4; q++) {
+                if ((deepStars - pointCoord[q][2]) / deepStars < .2) continue;
 
                 xCord = Math.abs(x - pointCoord[q][0]);
                 yCord = Math.abs(y - pointCoord[q][1]);
                 zCord = Math.abs(z - pointCoord[q][2]);
 
                 vector = Math.sqrt((xCord * xCord) + (yCord * yCord) + (zCord * zCord));
-
 
                 if (vector > 5 && vector < pointDistance3D) {
                     let p = pointCoord[i][2];
@@ -193,10 +182,17 @@ window.onload = function () {
                         ctx.stroke();
                     }
                 }
-
-
             }
         }
+    }
 
+    function resize() {
+        canvasWidth = universeDiv.offsetWidth;
+        canvasHeight = universeDiv.offsetHeight;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        starsCount = canvasWidth * canvasHeight / 6000;
+        console.log(starsCount);
+        pointGenerator();
     }
 };
