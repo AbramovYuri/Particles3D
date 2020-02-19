@@ -10,5 +10,6 @@ body {
     height: 100vh;
     overflow: hidden;
     background-color: #fff;
-    background-size: 400% 400% !important;
+    background-size: 300% 300% !important;
+    /*background-repeat: no-repeat !important;*/
 }

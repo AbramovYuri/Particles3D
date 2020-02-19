@@ -84,7 +84,7 @@ window.onload = function () {
         gD ? g -= grSpeed : g += grSpeed;
         bD ? b -= grSpeed : b += grSpeed;
 
-        universeDiv.style.background = 'radial-gradient(circle, rgb(' + r + ',' + g + ',' + b + '), rgb(' + b + ',' + r + ',' + g + ') 50%, rgb(' + b + ',' + r + ',' + g + ') 50%, rgb(' + g + ',' + b + ',' + r + ') 100%)' + Math.sin(sinInt) * 20 + '%' + Math.cos(cosInt) * 15 + '%';
+        universeDiv.style.background = 'radial-gradient(circle, rgba(' + r + ',' + g + ',' + b + ',.5), rgba(' + b + ',' + r + ',' + g + ', 0)) ' + ((canvasWidth / 2) + (Math.sin(sinInt) * (canvasWidth / 2))) + 'px ' + ((canvasHeight / 2) + (Math.cos(cosInt) * (canvasHeight / 2))) + 'px';
 
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         pointSet();
