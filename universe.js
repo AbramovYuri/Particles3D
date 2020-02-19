@@ -5,9 +5,9 @@ window.onload = function () {
     let universeDiv = document.querySelector('.universe');
     let canvasWidth = universeDiv.offsetWidth;
     let canvasHeight = universeDiv.offsetHeight;
-    let mX, mY = 0;
-    let xTarget = 0;
-    let yTarget = 0;
+    let xTarget, yTarget = 0;
+    let xOffset = 0;
+    let yOffset = 0;
     let pointCoord = [];
     let starsCount;
     let starsSpeed = 10;
@@ -16,11 +16,11 @@ window.onload = function () {
     let pointDistance3D = 1500;
     let circle = 2 * Math.PI;
     let flashBrightness = 200;
-    let sinInt = 0;
+    let sinInt, cosInt = 0;
 
     universeDiv.onmousemove = function (event) {
-        mX = (canvasWidth / 2 - event.clientX) / 2;
-        mY = (canvasHeight / 2 - event.clientY) / 2;
+        xTarget = (canvasWidth / 2 - event.clientX) / 2;
+        yTarget = (canvasHeight / 2 - event.clientY) / 2;
 
         if (pointDistance > 150) return;
 
@@ -29,7 +29,7 @@ window.onload = function () {
     };
 
     universeDiv.onmousedown = function () {
-        if (pointDistance > 150) return;
+        // if (pointDistance > 150) return;
         pointDistance3D = 2000;
         pointDistance = 250;
     };
@@ -45,18 +45,19 @@ window.onload = function () {
     mainLoop();
 
     function mainLoop() {
-        if (xTarget < mX) {
-            xTarget++
-        } else if (xTarget > mX) {
-            xTarget--
+        if (xOffset < xTarget) {
+            xOffset++
+        } else if (xOffset > xTarget) {
+            xOffset--
         }
-        if (yTarget < mY) {
+        if (yOffset < yTarget) {
 
-            yTarget++
-        } else if (yTarget > mY) {
-            yTarget--
+            yOffset++
+        } else if (yOffset > yTarget) {
+            yOffset--
         }
         sinInt <= 360 ? sinInt += .005 : sinInt = 0;
+        cosInt <= 360 ? cosInt += .009 : cosInt = 0;
 
         pointDistance3D > 1000 ? pointDistance3D-- : null;
 
@@ -86,7 +87,7 @@ window.onload = function () {
     }
 
     function pointMove() {
-        let zOffset = Math.sin(sinInt) * 10;
+        let zOffset = (Math.sin(sinInt) * 5) * (Math.cos(cosInt) * 4);
 
         for (let i = 0; i < starsCount; i++) {
 
@@ -117,8 +118,8 @@ window.onload = function () {
 
         for (let i = 0; i < starsCount; i++) {
             let z = pointCoord[i][2];
-            let x = (deepStars * pointCoord[i][0]) / (z + deepStars) + canvasWidth / 2 - xTarget;
-            let y = (deepStars * pointCoord[i][1]) / (z + deepStars) + canvasHeight / 2 - yTarget;
+            let x = (deepStars * pointCoord[i][0]) / (z + deepStars) + canvasWidth / 2 - xOffset;
+            let y = (deepStars * pointCoord[i][1]) / (z + deepStars) + canvasHeight / 2 - yOffset;
             let r = (deepStars - z) / deepStars * 1.5;
             if (r > .1) {
                 ctx.fillStyle = 'rgba(' + pointCoord[i][4] + ',' + r + ')';
@@ -160,12 +161,12 @@ window.onload = function () {
 
                 if (vector > 5 && vector < pointDistance3D) {
                     let p = pointCoord[i][2];
-                    let x = (deepStars * pointCoord[i][0]) / (p + deepStars) + canvasWidth / 2 - xTarget;
-                    let y = (deepStars * pointCoord[i][1]) / (p + deepStars) + canvasHeight / 2 - yTarget;
+                    let x = (deepStars * pointCoord[i][0]) / (p + deepStars) + canvasWidth / 2 - xOffset;
+                    let y = (deepStars * pointCoord[i][1]) / (p + deepStars) + canvasHeight / 2 - yOffset;
 
                     let p2 = pointCoord[q][2];
-                    let x2 = (deepStars * pointCoord[q][0]) / (p2 + deepStars) + canvasWidth / 2 - xTarget;
-                    let y2 = (deepStars * pointCoord[q][1]) / (p2 + deepStars) + canvasHeight / 2 - yTarget;
+                    let x2 = (deepStars * pointCoord[q][0]) / (p2 + deepStars) + canvasWidth / 2 - xOffset;
+                    let y2 = (deepStars * pointCoord[q][1]) / (p2 + deepStars) + canvasHeight / 2 - yOffset;
 
                     xCord = Math.abs(x - x2);
                     yCord = Math.abs(y - y2);
