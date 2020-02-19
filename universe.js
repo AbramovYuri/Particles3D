@@ -17,11 +17,21 @@ window.onload = function () {
     let circle = 2 * Math.PI;
     let flashBrightness = 200;
     let sinInt, cosInt = 0;
+    let r = 0;
+    let g = 123;
+    let b = 255;
+    let rD = false;
+    let gD = false;
+    let bD = false;
+    let grSpeed = .2;
 
     universeDiv.onmousemove = function (event) {
-        xTarget = (canvasWidth / 2 - event.clientX) / 2;
-        yTarget = (canvasHeight / 2 - event.clientY) / 2;
+        // xTarget = (canvasWidth / 2 - event.clientX) / 2;
+        // yTarget = (canvasHeight / 2 - event.clientY) / 2;
 
+        pointCoord[0] = [event.clientX - canvasWidth / 2, event.clientY - canvasHeight / 2, 0, 3, '0,0,0', 0, 0, 0];
+
+        console.log(pointCoord[0]);
         if (pointDistance > 150) return;
 
         pointDistance3D = 2000;
@@ -63,6 +73,19 @@ window.onload = function () {
 
         pointDistance > 150 ? pointDistance -= .2 : null;
 
+        if (r > 255) rD = true;
+        if (r < 0) rD = false;
+        if (g > 255) gD = true;
+        if (g < 0) gD = false;
+        if (b > 255) bD = true;
+        if (b < 0) bD = false;
+
+        rD ? r -= grSpeed : r += grSpeed;
+        gD ? g -= grSpeed : g += grSpeed;
+        bD ? b -= grSpeed : b += grSpeed;
+
+        universeDiv.style.background = 'radial-gradient(circle, rgb(' + r + ',' + g + ',' + b + '), rgb(' + b + ',' + r + ',' + g + ') 50%, rgb(' + b + ',' + r + ',' + g + ') 50%, rgb(' + g + ',' + b + ',' + r + ') 100%)' + Math.sin(sinInt) * 20 + '%' + Math.cos(cosInt) * 15 + '%';
+
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         pointSet();
         lineDraw();
@@ -87,9 +110,11 @@ window.onload = function () {
     }
 
     function pointMove() {
-        let zOffset = (Math.sin(sinInt) * 5) * (Math.cos(cosInt) * 4);
+        let zOffset = (Math.sin(sinInt) * 3) * (Math.cos(cosInt) * 2);
 
-        for (let i = 0; i < starsCount; i++) {
+        // zOffset = 0;
+
+        for (let i = 1; i < starsCount; i++) {
 
             if (pointCoord[i][2] > -deepStars) {
                 pointCoord[i][2] -= (pointCoord[i][3] - zOffset);
@@ -116,7 +141,7 @@ window.onload = function () {
 
     function pointSet() {
 
-        for (let i = 0; i < starsCount; i++) {
+        for (let i = 1; i < starsCount; i++) {
             let z = pointCoord[i][2];
             let x = (deepStars * pointCoord[i][0]) / (z + deepStars) + canvasWidth / 2 - xOffset;
             let y = (deepStars * pointCoord[i][1]) / (z + deepStars) + canvasHeight / 2 - yOffset;
@@ -128,6 +153,8 @@ window.onload = function () {
                 ctx.arc(x, y, r, 0, circle);
                 ctx.fill();
             }
+
+            // if (r > 3) console.log(pointCoord[i])
 
             if ((Math.random() > .9997) && pointCoord[i][5] === 0) {
                 pointCoord[i][5] = flashBrightness;
@@ -174,7 +201,6 @@ window.onload = function () {
                     vector = Math.sqrt((xCord * xCord) + (yCord * yCord));
 
                     if (vector > 5 && vector < pointDistance) {
-
                         ctx.beginPath();
                         // ctx.strokeStyle = 'rgba(255, 0, 0,' + ((1 - vector / pointDistance) / 4 + (pointCoord[i][5] / 255)) + ')';
                         ctx.strokeStyle = 'rgba(' + pointCoord[i][4] + ',' + ((1 - vector / pointDistance) / 2 + (pointCoord[i][5] / 255)) + ')';
